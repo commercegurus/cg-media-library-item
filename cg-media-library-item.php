@@ -1,12 +1,17 @@
 <?php
 /**
  * Plugin Name: CG Media Library Item
- * Plugin URI: https://example.com/cg-media-library-item
+ * Plugin URI: https://commercegurus.com/plugins/cg-media-library-item
  * Description: Displays media library items with title, description, file type, icon, size, and download link
- * Version: 1.0
- * Author: Claude
- * Author URI: https://example.com
+ * Version: 1.0.0
+ * Author: CommerceGurus
+ * Author URI: https://commercegurus.com
  * Text Domain: cg-media-library-item
+ * Domain Path: /languages
+ * Requires at least: 6.0
+ * Requires PHP: 7.4
+ * License: GPL-2.0+
+ * License URI: http://www.gnu.org/licenses/gpl-2.0.txt
  */
 
 // Exit if accessed directly

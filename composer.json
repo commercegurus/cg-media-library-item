@@ -1,0 +1,21 @@
+{
+    "name": "commercegurus/cg-media-library-item",
+    "description": "WordPress plugin to display media library items with enhanced presentation",
+    "type": "wordpress-plugin",
+    "authors": [
+        {
+            "name": "Colm Troy",
+            "email": "colm@commercegurus.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require-dev": {
+        "squizlabs/php_codesniffer": "^3.11",
+        "wp-coding-standards/wpcs": "^3.0"
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
+    }
+}
