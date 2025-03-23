@@ -33,7 +33,10 @@
     // Function to update the preview
     function updatePreview(target, color) {
       var selector =
-        "#cg-media-item-preview " + cgMediaLibrarySettings.colorMap[target];
+        "#cg-media-item-preview" +
+        (cgMediaLibrarySettings.colorMap[target] !== ".media-item"
+          ? " " + cgMediaLibrarySettings.colorMap[target]
+          : "");
       var property = cgMediaLibrarySettings.cssProperties[target];
 
       // Special case for hover state
@@ -59,6 +62,9 @@
       } else {
         // Update the regular style
         $(selector).css(property, color);
+
+        // Debug
+        console.log("Updating:", selector, property, color);
       }
     }
 
