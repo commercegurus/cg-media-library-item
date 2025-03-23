@@ -50,9 +50,11 @@ class CG_Media_Library_Item_Settings {
 		'size_font_family'       => 'inherit',
 		'size_font_size'         => '16px',
 		'size_font_weight'       => '500',
+		'size_line_height'       => '1.4',
 		'download_font_family'   => 'inherit',
 		'download_font_size'     => '16px',
 		'download_font_weight'   => '500',
+		'download_line_height'   => '1.4',
 	);
 
 	/**
@@ -334,9 +336,10 @@ class CG_Media_Library_Item_Settings {
 		$font_weight_id    = $prefix . '_font_weight';
 		$font_weight_value = isset( $typography[ $font_weight_id ] ) ? $typography[ $font_weight_id ] : $this->default_typography[ $font_weight_id ];
 
-		// Line height field (only for title).
+		// Line height field.
 		$line_height_id    = $prefix . '_line_height';
-		$line_height_value = isset( $typography[ $line_height_id ] ) ? $typography[ $line_height_id ] : $this->default_typography[ $line_height_id ];
+		$has_line_height   = isset( $this->default_typography[ $line_height_id ] );
+		$line_height_value = isset( $typography[ $line_height_id ] ) ? $typography[ $line_height_id ] : ( $has_line_height ? $this->default_typography[ $line_height_id ] : '' );
 
 		?>
 		<div class="cg-typography-fields">
@@ -382,7 +385,7 @@ class CG_Media_Library_Item_Settings {
 				</select>
 			</div>
 			
-			<?php if ( 'title' === $prefix ) : ?>
+			<?php if ( $has_line_height ) : ?>
 				<div class="cg-typography-field">
 					<label for="cg_typography_<?php echo esc_attr( $line_height_id ); ?>"><?php esc_html_e( 'Line Height', 'cg-media-library-item' ); ?></label>
 					<input 
