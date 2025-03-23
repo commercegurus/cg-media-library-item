@@ -29,35 +29,6 @@
       },
     });
 
-    // Tab functionality
-    const $tabs = $(".nav-tab");
-    const $tabContent = $(".tab-content");
-    const $colorsResetWrapper = $("#cg-colors-reset-wrapper");
-    const $typographyResetWrapper = $("#cg-typography-reset-wrapper");
-
-    // Handle tab clicks
-    $tabs.on("click", function (e) {
-      e.preventDefault();
-
-      // Set active tab
-      $tabs.removeClass("nav-tab-active");
-      $(this).addClass("nav-tab-active");
-
-      // Show corresponding content
-      const target = $(this).attr("href");
-      $tabContent.hide();
-      $(target).show();
-
-      // Show/hide appropriate reset button
-      if (target === "#colors-tab") {
-        $colorsResetWrapper.show();
-        $typographyResetWrapper.hide();
-      } else {
-        $colorsResetWrapper.hide();
-        $typographyResetWrapper.show();
-      }
-    });
-
     // Function to update color preview
     function updateColorPreview(target, color) {
       var selector =

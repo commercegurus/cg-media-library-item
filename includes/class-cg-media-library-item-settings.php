@@ -285,24 +285,29 @@ class CG_Media_Library_Item_Settings {
 	 * Render reset buttons after the color and typography sections
 	 */
 	public function render_reset_buttons() {
+		// Get the current tab from the URL
+		$current_tab = isset( $_GET['tab'] ) ? sanitize_text_field( $_GET['tab'] ) : 'colors';
 		?>
 		<tr>
 			<th scope="row"></th>
 			<td>
-				<div id="cg-colors-reset-wrapper" class="cg-reset-wrapper">
-					<button type="button" id="cg-reset-colors" class="button button-secondary">
-						<?php esc_html_e( 'Reset All Colors to Default', 'cg-media-library-item' ); ?>
-					</button>
-					<span class="spinner"></span>
-					<span class="cg-reset-message"></span>
-				</div>
-				<div id="cg-typography-reset-wrapper" class="cg-reset-wrapper" style="display: none;">
-					<button type="button" id="cg-reset-typography" class="button button-secondary">
-						<?php esc_html_e( 'Reset All Typography to Default', 'cg-media-library-item' ); ?>
-					</button>
-					<span class="spinner"></span>
-					<span class="cg-reset-message"></span>
-				</div>
+				<?php if ( $current_tab === 'typography' ) : ?>
+					<div id="cg-typography-reset-wrapper" class="cg-reset-wrapper">
+						<button type="button" id="cg-reset-typography" class="button button-secondary">
+							<?php esc_html_e( 'Reset All Typography to Default', 'cg-media-library-item' ); ?>
+						</button>
+						<span class="spinner"></span>
+						<span class="cg-reset-message"></span>
+					</div>
+				<?php else : ?>
+					<div id="cg-colors-reset-wrapper" class="cg-reset-wrapper">
+						<button type="button" id="cg-reset-colors" class="button button-secondary">
+							<?php esc_html_e( 'Reset All Colors to Default', 'cg-media-library-item' ); ?>
+						</button>
+						<span class="spinner"></span>
+						<span class="cg-reset-message"></span>
+					</div>
+				<?php endif; ?>
 			</td>
 		</tr>
 		<?php
@@ -438,6 +443,9 @@ class CG_Media_Library_Item_Settings {
 			return;
 		}
 
+		// Get current tab
+		$current_tab = isset( $_GET['tab'] ) ? sanitize_text_field( $_GET['tab'] ) : 'colors';
+
 		// Get saved settings.
 		$colors = get_option( 'cg_media_library_item_colors', $this->default_colors );
 		$typography = get_option( 'cg_media_library_item_typography', $this->default_typography );
@@ -446,8 +454,8 @@ class CG_Media_Library_Item_Settings {
 			<h1><?php echo esc_html( get_admin_page_title() ); ?></h1>
 			
 			<h2 class="nav-tab-wrapper">
-				<a href="#colors-tab" class="nav-tab nav-tab-active"><?php esc_html_e( 'Colors', 'cg-media-library-item' ); ?></a>
-				<a href="#typography-tab" class="nav-tab"><?php esc_html_e( 'Typography', 'cg-media-library-item' ); ?></a>
+				<a href="?page=cg-media-library-item-settings&tab=colors" class="nav-tab <?php echo $current_tab === 'colors' ? 'nav-tab-active' : ''; ?>"><?php esc_html_e( 'Colors', 'cg-media-library-item' ); ?></a>
+				<a href="?page=cg-media-library-item-settings&tab=typography" class="nav-tab <?php echo $current_tab === 'typography' ? 'nav-tab-active' : ''; ?>"><?php esc_html_e( 'Typography', 'cg-media-library-item' ); ?></a>
 			</h2>
 			
 			<div class="cg-settings-layout">
@@ -455,15 +463,17 @@ class CG_Media_Library_Item_Settings {
 					<form action="options.php" method="post">
 						<?php settings_fields( 'cg_media_library_item_settings' ); ?>
 						
-						<div id="colors-tab" class="tab-content">
-							<?php $this->do_settings_sections( 'cg-media-library-item-settings', 'cg_media_library_item_colors_section' ); ?>
-							<?php $this->render_reset_buttons(); ?>
-						</div>
-						
-						<div id="typography-tab" class="tab-content" style="display: none;">
-							<?php $this->do_settings_sections( 'cg-media-library-item-settings', 'cg_media_library_item_typography_section' ); ?>
-							<?php $this->render_reset_buttons(); ?>
-						</div>
+						<?php if ( $current_tab === 'typography' ) : ?>
+							<div id="typography-tab" class="tab-content">
+								<?php $this->do_settings_sections( 'cg-media-library-item-settings', 'cg_media_library_item_typography_section' ); ?>
+								<?php $this->render_reset_buttons(); ?>
+							</div>
+						<?php else : ?>
+							<div id="colors-tab" class="tab-content">
+								<?php $this->do_settings_sections( 'cg-media-library-item-settings', 'cg_media_library_item_colors_section' ); ?>
+								<?php $this->render_reset_buttons(); ?>
+							</div>
+						<?php endif; ?>
 						
 						<?php submit_button(); ?>
 					</form>
