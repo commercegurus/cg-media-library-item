@@ -100,8 +100,8 @@ class CG_Media_Library_Item_Settings {
 	public function add_settings_page() {
 		add_submenu_page(
 			'options-general.php',
-			__( 'Media Library Item Settings', 'cg-media-library-item' ),
-			__( 'Media Library Item', 'cg-media-library-item' ),
+			__( 'CG Media Library Item Settings', 'cg-media-library-item' ),
+			__( 'CG Media Library Item', 'cg-media-library-item' ),
 			'manage_options',
 			'cg-media-library-item-settings',
 			array( $this, 'render_settings_page' )
