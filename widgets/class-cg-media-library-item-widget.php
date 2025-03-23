@@ -112,7 +112,7 @@ class CG_Media_Library_Item_Widget extends \Elementor\Widget_Base {
 
 		$this->end_controls_section();
 
-		// Typography Settings
+		// Typography Settings.
 		$this->start_controls_section(
 			'typography_section',
 			array(
@@ -121,7 +121,7 @@ class CG_Media_Library_Item_Widget extends \Elementor\Widget_Base {
 			)
 		);
 
-		// Title Typography
+		// Title Typography.
 		$this->add_group_control(
 			\Elementor\Group_Control_Typography::get_type(),
 			array(
@@ -131,7 +131,7 @@ class CG_Media_Library_Item_Widget extends \Elementor\Widget_Base {
 			)
 		);
 
-		// Badge Typography
+		// Badge Typography.
 		$this->add_group_control(
 			\Elementor\Group_Control_Typography::get_type(),
 			array(
@@ -141,7 +141,7 @@ class CG_Media_Library_Item_Widget extends \Elementor\Widget_Base {
 			)
 		);
 
-		// File Size Typography
+		// File Size Typography.
 		$this->add_group_control(
 			\Elementor\Group_Control_Typography::get_type(),
 			array(
@@ -151,7 +151,7 @@ class CG_Media_Library_Item_Widget extends \Elementor\Widget_Base {
 			)
 		);
 
-		// Download Button Typography
+		// Download Button Typography.
 		$this->add_group_control(
 			\Elementor\Group_Control_Typography::get_type(),
 			array(
@@ -163,7 +163,7 @@ class CG_Media_Library_Item_Widget extends \Elementor\Widget_Base {
 
 		$this->end_controls_section();
 
-		// Colors Settings
+		// Colors Settings.
 		$this->start_controls_section(
 			'colors_section',
 			array(
@@ -300,7 +300,7 @@ class CG_Media_Library_Item_Widget extends \Elementor\Widget_Base {
 			'download-title' => ! empty( $settings['download_text'] ) ? $settings['download_text'] : 'Download',
 		);
 
-		// Build and output the shortcode
+		// Build and output the shortcode.
 		echo do_shortcode(
 			sprintf(
 				'[cg_media_library_item id="%1$s" title="%2$s" download-title="%3$s"]',
