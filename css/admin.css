@@ -52,31 +52,50 @@
     width: 80px !important;
 }
 
-/* Preview section */
-.typography-preview {
+/* Settings layout */
+.cg-settings-layout {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
     margin-top: 20px;
+}
+
+.cg-settings-form {
+    flex: 1;
+    min-width: 500px;
+    max-width: 60%;
+}
+
+.cg-settings-preview {
+    flex: 0 0 300px;
     padding: 20px;
-    border: 1px solid #ddd;
-    background-color: #f9f9f9;
-    border-radius: 4px;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    position: sticky;
+    top: 50px;
+    align-self: flex-start;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
 
-.typography-preview-title {
-    margin-bottom: 10px;
-    font-weight: 600;
+.cg-settings-preview h3 {
+    margin-top: 0;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
 }
 
-.typography-sample {
-    margin-bottom: 15px;
-}
-
-/* Responsive settings */
-@media screen and (max-width: 782px) {
-    .cg-typography-fields {
+/* Responsive adjustments */
+@media screen and (max-width: 1200px) {
+    .cg-settings-layout {
         flex-direction: column;
     }
     
-    .cg-typography-field {
-        width: 100%;
+    .cg-settings-form {
+        max-width: 100%;
+    }
+    
+    .cg-settings-preview {
+        position: static;
+        max-width: 100%;
     }
 }

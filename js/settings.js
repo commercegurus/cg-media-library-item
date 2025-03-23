@@ -4,10 +4,30 @@
 (function ($) {
   "use strict";
 
-  // Initialize color pickers
   $(function () {
-    // Initialize color pickers
-    $(".cg-color-picker").wpColorPicker();
+    // Initialize color pickers with live preview
+    $(".cg-color-picker").wpColorPicker({
+      change: function (event, ui) {
+        // Get the color value
+        var color = ui.color.toString();
+
+        // Get the target element from data attribute
+        var target = $(this).data("target");
+
+        // Update the preview
+        updateColorPreview(target, color);
+      },
+      clear: function (event) {
+        // Get the target element from data attribute
+        var target = $(this).data("target");
+
+        // Get the default color
+        var defaultColor = $(this).data("default-color");
+
+        // Update the preview with default color
+        updateColorPreview(target, defaultColor);
+      },
+    });
 
     // Tab functionality
     const $tabs = $(".nav-tab");
@@ -27,69 +47,91 @@
       $(target).show();
     });
 
-    // Font size and line height input validation
-    $(".cg-font-size, .cg-line-height").on("input", function () {
-      let value = $(this).val();
+    // Function to update color preview
+    function updateColorPreview(target, color) {
+      var selector =
+        "#cg-media-item-preview" +
+        (cgMediaLibrarySettings.colorMap[target] !== ".media-item"
+          ? " " + cgMediaLibrarySettings.colorMap[target]
+          : "");
+      var property = cgMediaLibrarySettings.cssProperties[target];
 
-      // Clean the input value to ensure it has proper format
-      if ($(this).hasClass("cg-font-size")) {
-        // If there is no unit, add 'px' as default
-        if (value && /^[0-9.]+$/.test(value)) {
-          $(this).val(value + "px");
+      // Special case for hover state
+      if (selector.includes(":hover")) {
+        // Create a style element for hover state if it doesn't exist
+        if ($("#cg-hover-style").length === 0) {
+          $("head").append('<style id="cg-hover-style"></style>');
         }
+
+        // Update the hover style
+        $("#cg-hover-style").text(
+          selector + " { " + property + ": " + color + " !important; }"
+        );
+
+        // Also update the download button to show the hover effect when hovered in the preview
+        $("#cg-media-item-preview .media-item__download-btn")
+          .on("mouseenter", function () {
+            $(this).css(property, color);
+          })
+          .on("mouseleave", function () {
+            $(this).css(property, "");
+          });
+      } else {
+        // Update the regular style
+        $(selector).css(property, color);
       }
-
-      // Prevent invalid characters for line height
-      if ($(this).hasClass("cg-line-height")) {
-        if (!/^[0-9.]*$/.test(value)) {
-          $(this).val(value.replace(/[^0-9.]/g, ""));
-        }
-      }
-    });
-
-    // Live preview functionality for typography settings
-    function updateTypographyPreview() {
-      // Get current typography values
-      const titleFontFamily = $("#cg_typography_title_font_family").val();
-      const titleFontSize = $("#cg_typography_title_font_size").val();
-      const titleFontWeight = $("#cg_typography_title_font_weight").val();
-      const titleLineHeight = $("#cg_typography_title_line_height").val();
-
-      const typeBadgeFontFamily = $(
-        "#cg_typography_type_badge_font_family"
-      ).val();
-      const typeBadgeFontSize = $("#cg_typography_type_badge_font_size").val();
-      const typeBadgeFontWeight = $(
-        "#cg_typography_type_badge_font_weight"
-      ).val();
-
-      // Update preview styles
-      $(".preview-title").css({
-        "font-family": titleFontFamily === "inherit" ? "" : titleFontFamily,
-        "font-size": titleFontSize,
-        "font-weight": titleFontWeight,
-        "line-height": titleLineHeight,
-      });
-
-      $(".preview-badge").css({
-        "font-family":
-          typeBadgeFontFamily === "inherit" ? "" : typeBadgeFontFamily,
-        "font-size": typeBadgeFontSize,
-        "font-weight": typeBadgeFontWeight,
-      });
     }
 
-    // Initial call to set up preview
-    if ($(".typography-preview").length) {
-      updateTypographyPreview();
+    // Typography live preview
+    $(".cg-typography-field select, .cg-typography-field input").on(
+      "change input",
+      function () {
+        var id = $(this).attr("id");
+        var value = $(this).val();
 
-      // Update on change
-      $(".cg-typography-field select, .cg-typography-field input").on(
-        "change input",
-        function () {
-          updateTypographyPreview();
-        }
-      );
+        // Extract the field type from the ID
+        var fieldType = id.replace("cg_typography_", "");
+
+        // Update the preview
+        updateTypographyPreview(fieldType, value);
+      }
+    );
+
+    // Function to update typography preview
+    function updateTypographyPreview(fieldType, value) {
+      // Skip if this field type is not in our mapping
+      if (!cgMediaLibrarySettings.typographyMap[fieldType]) {
+        return;
+      }
+
+      var selector =
+        "#cg-media-item-preview " +
+        cgMediaLibrarySettings.typographyMap[fieldType];
+      var property = cgMediaLibrarySettings.typographyProperties[fieldType];
+
+      // Special handling for font-family
+      if (property === "font-family" && value === "inherit") {
+        value = "";
+      }
+
+      // Update the preview
+      $(selector).css(property, value);
     }
+
+    // Add hover effect to the download button in preview
+    $("#cg-media-item-preview .media-item__download-btn").hover(
+      function () {
+        // Get the hover color from the color picker
+        var hoverColor = $(
+          "#cg_media_library_item_download_btn_hover_color"
+        ).val();
+        $(this).css("color", hoverColor);
+      },
+      function () {
+        // Restore the normal color
+        var normalColor = $("#cg_media_library_item_download_btn_color").val();
+        $(this).css("color", normalColor);
+      }
+    );
   });
 })(jQuery);
