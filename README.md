@@ -15,6 +15,12 @@ CG Media Library Item provides a stylish and accessible way to display documents
 - **Elementor Integration**: Custom widget for Elementor page builder
 - **Shortcode Support**: Use anywhere with a simple shortcode
 
+<img width="795" alt="Screenshot 2025-03-23 at 22 49 17" src="https://github.com/user-attachments/assets/b3df42f0-74d1-4062-8200-cf2e8d3a59a7" />
+
+<img width="1207" alt="Screenshot 2025-03-23 at 22 52 22" src="https://github.com/user-attachments/assets/e956a3f5-b52a-486c-9425-bee963ea9680" />
+
+
+
 ## Installation
 
 1. Upload the `cg-media-library-item` folder to the `/wp-content/plugins/` directory
@@ -44,6 +50,9 @@ Parameters:
 3. Drag the widget to your page
 4. Select a file from the media library
 5. Customize the title and download button text if needed
+
+<img width="1465" alt="Screenshot 2025-03-23 at 22 50 59" src="https://github.com/user-attachments/assets/ecd533c9-fcb7-4513-8c4e-6ccf03aaf914" />
+
 
 ## Development
 
