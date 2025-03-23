@@ -11,7 +11,8 @@
     "logs": "wp-env logs",
     "cli": "wp-env run cli wp",
     "build": "wp-env run cli wp plugin activate cg-media-library-item",
-    "test:e2e": "wp-env run phpunit 'phpunit -c /var/www/html/wp-content/plugins/cg-media-library-item/phpunit.xml.dist'"
+    "test:e2e": "wp-env run phpunit 'phpunit -c /var/www/html/wp-content/plugins/cg-media-library-item/phpunit.xml.dist'",
+    "zip": "rm -rf cg-media-library-item.zip && zip -r cg-media-library-item.zip . -x \"*.git*\" \"*node_modules*\" \"*.DS_Store\" \"*test-uploads*\" \"*.zip\" \"*vendor*\" \"*.github*\" \"*tests*\" \"*.vscode*\" \"*.idea*\" \"*package-lock.json*\""
   },
   "devDependencies": {
     "@wordpress/env": "^10.20.0",
