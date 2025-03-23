@@ -46,7 +46,7 @@ class CG_Media_Library_Item_Settings {
 		'type_badge_font_family' => 'inherit',
 		'type_badge_font_size'   => '14px',
 		'type_badge_font_weight' => '600',
-		'type_badge_line_height' => '1.2', // Added this line to fix the warning
+		'type_badge_line_height' => '1.2',
 		'size_font_family'       => 'inherit',
 		'size_font_size'         => '16px',
 		'size_font_weight'       => '500',
@@ -285,7 +285,7 @@ class CG_Media_Library_Item_Settings {
 	 * Render reset buttons after the color and typography sections
 	 */
 	public function render_reset_buttons() {
-		// Get the current tab from the URL
+		// Get the current tab from the URL.
 		$current_tab = isset( $_GET['tab'] ) ? sanitize_text_field( $_GET['tab'] ) : 'colors';
 		?>
 		<tr>
@@ -477,7 +477,7 @@ class CG_Media_Library_Item_Settings {
 			return;
 		}
 
-		// Get current tab
+		// Get current tab.
 		$current_tab = isset( $_GET['tab'] ) ? sanitize_text_field( $_GET['tab'] ) : 'colors';
 
 		// Get saved settings.
@@ -679,7 +679,7 @@ class CG_Media_Library_Item_Settings {
 			return;
 		}
 
-		// Enqueue main plugin styles for preview
+		// Enqueue main plugin styles for preview.
 		wp_enqueue_style(
 			'cg-media-library-item',
 			plugin_dir_url( __DIR__ ) . 'css/cg-media-library-item.css',
@@ -689,7 +689,7 @@ class CG_Media_Library_Item_Settings {
 
 		wp_enqueue_style( 'wp-color-picker' );
 
-		// Enqueue settings script
+		// Enqueue settings script.
 		wp_enqueue_script(
 			'cg-media-library-item-settings',
 			plugin_dir_url( __DIR__ ) . 'js/settings.js',
@@ -698,7 +698,7 @@ class CG_Media_Library_Item_Settings {
 			true
 		);
 
-		// Pass color and typography mapping to JavaScript
+		// Pass color and typography mapping to JavaScript.
 		wp_localize_script(
 			'cg-media-library-item-settings',
 			'cgMediaLibrarySettings',

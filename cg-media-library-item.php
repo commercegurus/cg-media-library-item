@@ -14,12 +14,12 @@
  * License URI: http://www.gnu.org/licenses/gpl-2.0.txt
  */
 
-// Exit if accessed directly
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-// Include settings class
+// Include settings class.
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-cg-media-library-item-settings.php';
 
 /**
@@ -47,13 +47,13 @@ class CG_Media_Library_Item {
 	 * Constructor
 	 */
 	public function __construct() {
-		// Initialize settings
+		// Initialize settings.
 		$this->settings = new CG_Media_Library_Item_Settings();
 
-		// Register shortcode
+		// Register shortcode.
 		add_shortcode( 'cg_media_library_item', array( $this, 'render_shortcode' ) );
 
-		// Register styles
+		// Register styles.
 		add_action( 'wp_enqueue_scripts', array( $this, 'register_styles' ) );
 	}
 
@@ -86,41 +86,41 @@ class CG_Media_Library_Item {
 			'cg_media_library_item'
 		);
 
-		// Enqueue styles
+		// Enqueue styles.
 		wp_enqueue_style( 'cg-media-library-item' );
 
-		// Get attachment ID
+		// Get attachment ID.
 		$attachment_id = intval( $atts['id'] );
 
-		// Check if attachment exists and is valid
+		// Check if attachment exists and is valid.
 		if ( $attachment_id <= 0 || ! ( $attachment = get_post( $attachment_id ) ) || 'attachment' !== $attachment->post_type ) {
 			return '<div class="media-item__error">Invalid media item ID.</div>';
 		}
 
-		// Get attachment data
+		// Get attachment data.
 		$attachment_url         = wp_get_attachment_url( $attachment_id );
 		$attachment_title       = ! empty( $atts['title'] ) ? $atts['title'] : get_the_title( $attachment_id );
 		$download_title         = $atts['download-title'];
 		$attachment_description = $attachment->post_content;
 
-		// Get mime type and file extension
+		// Get mime type and file extension.
 		$mime_type = get_post_mime_type( $attachment_id );
 		$file_ext  = strtoupper( pathinfo( $attachment->guid, PATHINFO_EXTENSION ) );
 
-		// Get file size from attachment metadata
+		// Get file size from attachment metadata.
 		$metadata  = wp_get_attachment_metadata( $attachment_id );
 		$file_size = 'Unknown';
 		if ( ! empty( $metadata['filesize'] ) ) {
 			$file_size = size_format( $metadata['filesize'] );
 		} else {
-			// Fallback to post meta for non-image attachments
+			// Fallback to post meta for non-image attachments.
 			$file_size_raw = get_post_meta( $attachment_id, '_wp_attachment_filesize', true );
 			if ( $file_size_raw ) {
 				$file_size = size_format( $file_size_raw );
 			}
 		}
 
-		// Start output buffer
+		// Start output buffer.
 		ob_start();
 		?>
 		<div class="media-item" role="region" aria-label="Document information">
@@ -150,12 +150,12 @@ class CG_Media_Library_Item {
 		</div>
 		<?php
 
-		// Return output buffer
+		// Return output buffer.
 		return ob_get_clean();
 	}
 }
 
-// Initialize plugin
+// Initialize plugin.
 new CG_Media_Library_Item();
 
 /**
@@ -164,15 +164,15 @@ new CG_Media_Library_Item();
  * @param \Elementor\Widgets_Manager $widgets_manager Elementor widgets manager.
  */
 function cg_register_media_library_item_widget( $widgets_manager ) {
-	// Check if Elementor is active
+	// Check if Elementor is active.
 	if ( ! did_action( 'elementor/loaded' ) ) {
 		return;
 	}
 
-	// Include widget file
+	// Include widget file.
 	require_once plugin_dir_path( __FILE__ ) . 'widgets/class-cg-media-library-item-widget.php';
 
-	// Register the widget
+	// Register the widget.
 	$widgets_manager->register( new \CG_Media_Library_Item_Widget() );
 }
 add_action( 'elementor/widgets/register', 'cg_register_media_library_item_widget' );
@@ -183,7 +183,7 @@ add_action( 'elementor/widgets/register', 'cg_register_media_library_item_widget
  * @param \Elementor\Elements_Manager $elements_manager Elementor elements manager.
  */
 function cg_add_elementor_widget_category( $elements_manager ) {
-	// Check if Elementor is active
+	// Check if Elementor is active.
 	if ( ! did_action( 'elementor/loaded' ) ) {
 		return;
 	}
