@@ -111,6 +111,176 @@ class CG_Media_Library_Item_Widget extends \Elementor\Widget_Base {
         );
 
         $this->end_controls_section();
+        
+        // Typography Settings
+        $this->start_controls_section(
+            'typography_section',
+            [
+                'label' => esc_html__('Typography', 'cg-media-library-item'),
+                'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
+            ]
+        );
+        
+        // Title Typography
+        $this->add_group_control(
+            \Elementor\Group_Control_Typography::get_type(),
+            [
+                'name'     => 'title_typography',
+                'label'    => esc_html__('Title Typography', 'cg-media-library-item'),
+                'selector' => '{{WRAPPER}} .media-item__title',
+            ]
+        );
+        
+        // Badge Typography
+        $this->add_group_control(
+            \Elementor\Group_Control_Typography::get_type(),
+            [
+                'name'     => 'badge_typography',
+                'label'    => esc_html__('Type Badge Typography', 'cg-media-library-item'),
+                'selector' => '{{WRAPPER}} .media-item__type-badge',
+            ]
+        );
+        
+        // File Size Typography
+        $this->add_group_control(
+            \Elementor\Group_Control_Typography::get_type(),
+            [
+                'name'     => 'file_size_typography',
+                'label'    => esc_html__('File Size Typography', 'cg-media-library-item'),
+                'selector' => '{{WRAPPER}} .media-item__size',
+            ]
+        );
+        
+        // Download Button Typography
+        $this->add_group_control(
+            \Elementor\Group_Control_Typography::get_type(),
+            [
+                'name'     => 'download_button_typography',
+                'label'    => esc_html__('Download Button Typography', 'cg-media-library-item'),
+                'selector' => '{{WRAPPER}} .media-item__download-text',
+            ]
+        );
+        
+        $this->end_controls_section();
+        
+        // Colors Settings
+        $this->start_controls_section(
+            'colors_section',
+            [
+                'label' => esc_html__('Colors', 'cg-media-library-item'),
+                'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
+            ]
+        );
+        
+        $this->add_control(
+            'background_color',
+            [
+                'label'     => esc_html__('Background Color', 'cg-media-library-item'),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'default'   => '#f9f9f9',
+                'selectors' => [
+                    '{{WRAPPER}} .media-item' => 'background-color: {{VALUE}};',
+                ],
+            ]
+        );
+        
+        $this->add_control(
+            'title_color',
+            [
+                'label'     => esc_html__('Title Color', 'cg-media-library-item'),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'default'   => '#1a202c',
+                'selectors' => [
+                    '{{WRAPPER}} .media-item__title' => 'color: {{VALUE}};',
+                ],
+            ]
+        );
+        
+        $this->add_control(
+            'badge_bg_color',
+            [
+                'label'     => esc_html__('Type Badge Background', 'cg-media-library-item'),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'default'   => '#e2e8f0',
+                'selectors' => [
+                    '{{WRAPPER}} .media-item__type-badge' => 'background-color: {{VALUE}};',
+                ],
+            ]
+        );
+        
+        $this->add_control(
+            'badge_text_color',
+            [
+                'label'     => esc_html__('Type Badge Text Color', 'cg-media-library-item'),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'default'   => '#2d3748',
+                'selectors' => [
+                    '{{WRAPPER}} .media-item__type-badge' => 'color: {{VALUE}};',
+                ],
+            ]
+        );
+        
+        $this->add_control(
+            'footer_bg_color',
+            [
+                'label'     => esc_html__('Footer Background', 'cg-media-library-item'),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'default'   => '#2d3748',
+                'selectors' => [
+                    '{{WRAPPER}} .media-item__footer' => 'background-color: {{VALUE}};',
+                ],
+            ]
+        );
+        
+        $this->add_control(
+            'file_size_color',
+            [
+                'label'     => esc_html__('File Size Color', 'cg-media-library-item'),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'default'   => '#ffffff',
+                'selectors' => [
+                    '{{WRAPPER}} .media-item__size' => 'color: {{VALUE}};',
+                ],
+            ]
+        );
+        
+        $this->add_control(
+            'download_button_color',
+            [
+                'label'     => esc_html__('Download Button Color', 'cg-media-library-item'),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'default'   => '#ffffff',
+                'selectors' => [
+                    '{{WRAPPER}} .media-item__download-btn' => 'color: {{VALUE}};',
+                ],
+            ]
+        );
+        
+        $this->add_control(
+            'download_button_hover_color',
+            [
+                'label'     => esc_html__('Download Button Hover Color', 'cg-media-library-item'),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'default'   => '#ffffff',
+                'selectors' => [
+                    '{{WRAPPER}} .media-item__download-btn:hover, {{WRAPPER}} .media-item__download-btn:focus' => 'color: {{VALUE}}; outline-color: {{VALUE}}',
+                ],
+            ]
+        );
+        
+        $this->add_control(
+            'icon_color',
+            [
+                'label'     => esc_html__('Document Icon Color', 'cg-media-library-item'),
+                'type'      => \Elementor\Controls_Manager::COLOR,
+                'default'   => '#1a202c',
+                'selectors' => [
+                    '{{WRAPPER}} .media-item__doc-icon' => 'color: {{VALUE}};',
+                ],
+            ]
+        );
+        
+        $this->end_controls_section();
     }
 
     /**

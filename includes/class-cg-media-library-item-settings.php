@@ -34,6 +34,49 @@ class CG_Media_Library_Item_Settings {
 	);
 
 	/**
+	 * Default typography settings
+	 *
+	 * @var array
+	 */
+	private $default_typography = array(
+		'title_font_family'      => 'inherit',
+		'title_font_size'        => '24px',
+		'title_font_weight'      => '500',
+		'title_line_height'      => '1.2',
+		'type_badge_font_family' => 'inherit',
+		'type_badge_font_size'   => '14px',
+		'type_badge_font_weight' => '600',
+		'size_font_family'       => 'inherit',
+		'size_font_size'         => '16px',
+		'size_font_weight'       => '500',
+		'download_font_family'   => 'inherit',
+		'download_font_size'     => '16px',
+		'download_font_weight'   => '500',
+	);
+
+	/**
+	 * Available font families
+	 *
+	 * @var array
+	 */
+	private $font_families = array(
+		'inherit'                                     => 'Theme Default',
+		'-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif' => 'System UI',
+		'Arial, Helvetica, sans-serif'               => 'Arial',
+		'"Arial Black", Gadget, sans-serif'          => 'Arial Black',
+		'"Comic Sans MS", cursive, sans-serif'       => 'Comic Sans MS',
+		'"Courier New", Courier, monospace'          => 'Courier New',
+		'Georgia, serif'                             => 'Georgia',
+		'Impact, Charcoal, sans-serif'               => 'Impact',
+		'"Lucida Sans Unicode", "Lucida Grande", sans-serif' => 'Lucida Sans',
+		'"Palatino Linotype", "Book Antiqua", Palatino, serif' => 'Palatino',
+		'Tahoma, Geneva, sans-serif'                 => 'Tahoma',
+		'"Times New Roman", Times, serif'            => 'Times New Roman',
+		'"Trebuchet MS", Helvetica, sans-serif'      => 'Trebuchet MS',
+		'Verdana, Geneva, sans-serif'                => 'Verdana',
+	);
+
+	/**
 	 * Constructor
 	 */
 	public function __construct() {
@@ -44,7 +87,7 @@ class CG_Media_Library_Item_Settings {
 		add_action( 'admin_init', array( $this, 'register_settings' ) );
 		
 		// Add color picker assets.
-		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_color_picker' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_scripts' ) );
 		
 		// Add custom CSS to frontend.
 		add_action( 'wp_head', array( $this, 'output_custom_css' ) );
@@ -68,6 +111,7 @@ class CG_Media_Library_Item_Settings {
 	 * Register plugin settings
 	 */
 	public function register_settings() {
+		// Register color settings.
 		register_setting(
 			'cg_media_library_item_settings',
 			'cg_media_library_item_colors',
@@ -78,6 +122,18 @@ class CG_Media_Library_Item_Settings {
 			)
 		);
 
+		// Register typography settings.
+		register_setting(
+			'cg_media_library_item_settings',
+			'cg_media_library_item_typography',
+			array(
+				'type'              => 'array',
+				'sanitize_callback' => array( $this, 'sanitize_typography' ),
+				'default'           => $this->default_typography,
+			)
+		);
+
+		// Colors section.
 		add_settings_section(
 			'cg_media_library_item_colors_section',
 			__( 'Color Settings', 'cg-media-library-item' ),
@@ -85,8 +141,19 @@ class CG_Media_Library_Item_Settings {
 			'cg-media-library-item-settings'
 		);
 
+		// Typography section.
+		add_settings_section(
+			'cg_media_library_item_typography_section',
+			__( 'Typography Settings', 'cg-media-library-item' ),
+			array( $this, 'render_typography_section' ),
+			'cg-media-library-item-settings'
+		);
+
 		// Add color settings fields.
 		$this->add_color_fields();
+
+		// Add typography settings fields.
+		$this->add_typography_fields();
 	}
 
 	/**
@@ -122,10 +189,74 @@ class CG_Media_Library_Item_Settings {
 	}
 
 	/**
+	 * Add typography settings fields
+	 */
+	private function add_typography_fields() {
+		// Title typography.
+		add_settings_field(
+			'cg_media_library_item_title_typography',
+			__( 'Title Typography', 'cg-media-library-item' ),
+			array( $this, 'render_typography_fields' ),
+			'cg-media-library-item-settings',
+			'cg_media_library_item_typography_section',
+			array(
+				'label_for' => 'title',
+				'prefix'    => 'title',
+			)
+		);
+
+		// Type badge typography.
+		add_settings_field(
+			'cg_media_library_item_type_badge_typography',
+			__( 'Type Badge Typography', 'cg-media-library-item' ),
+			array( $this, 'render_typography_fields' ),
+			'cg-media-library-item-settings',
+			'cg_media_library_item_typography_section',
+			array(
+				'label_for' => 'type_badge',
+				'prefix'    => 'type_badge',
+			)
+		);
+
+		// File size typography.
+		add_settings_field(
+			'cg_media_library_item_size_typography',
+			__( 'File Size Typography', 'cg-media-library-item' ),
+			array( $this, 'render_typography_fields' ),
+			'cg-media-library-item-settings',
+			'cg_media_library_item_typography_section',
+			array(
+				'label_for' => 'size',
+				'prefix'    => 'size',
+			)
+		);
+
+		// Download button typography.
+		add_settings_field(
+			'cg_media_library_item_download_typography',
+			__( 'Download Button Typography', 'cg-media-library-item' ),
+			array( $this, 'render_typography_fields' ),
+			'cg-media-library-item-settings',
+			'cg_media_library_item_typography_section',
+			array(
+				'label_for' => 'download',
+				'prefix'    => 'download',
+			)
+		);
+	}
+
+	/**
 	 * Render the colors section description
 	 */
 	public function render_colors_section() {
 		echo '<p>' . esc_html__( 'Customize the colors of the media library item component.', 'cg-media-library-item' ) . '</p>';
+	}
+
+	/**
+	 * Render the typography section description
+	 */
+	public function render_typography_section() {
+		echo '<p>' . esc_html__( 'Customize the typography of the media library item component.', 'cg-media-library-item' ) . '</p>';
 	}
 
 	/**
@@ -146,8 +277,117 @@ class CG_Media_Library_Item_Settings {
 			value="<?php echo esc_attr( $value ); ?>" 
 			class="cg-color-picker" 
 			data-default-color="<?php echo esc_attr( $this->default_colors[ $id ] ); ?>" 
-			data-target="<?php echo esc_attr( $id ); ?>"
 		/>
+		<?php
+	}
+
+	/**
+	 * Render typography fields group
+	 *
+	 * @param array $args Field arguments.
+	 */
+	public function render_typography_fields( $args ) {
+		$prefix = $args['prefix'];
+		$typography = get_option( 'cg_media_library_item_typography', $this->default_typography );
+		
+		// Font family field.
+		$font_family = isset( $typography[ $prefix . '_font_family' ] ) 
+			? $typography[ $prefix . '_font_family' ] 
+			: $this->default_typography[ $prefix . '_font_family' ];
+		
+		// Font size field.
+		$font_size = isset( $typography[ $prefix . '_font_size' ] ) 
+			? $typography[ $prefix . '_font_size' ] 
+			: $this->default_typography[ $prefix . '_font_size' ];
+		
+		// Font weight field.
+		$font_weight = isset( $typography[ $prefix . '_font_weight' ] ) 
+			? $typography[ $prefix . '_font_weight' ] 
+			: $this->default_typography[ $prefix . '_font_weight' ];
+		
+		// Line height field (only for title).
+		$line_height = isset( $typography[ $prefix . '_line_height' ] ) 
+			? $typography[ $prefix . '_line_height' ] 
+			: $this->default_typography[ $prefix . '_line_height' ];
+
+		$font_weights = array(
+			'100' => __( 'Thin (100)', 'cg-media-library-item' ),
+			'200' => __( 'Extra Light (200)', 'cg-media-library-item' ),
+			'300' => __( 'Light (300)', 'cg-media-library-item' ),
+			'400' => __( 'Regular (400)', 'cg-media-library-item' ),
+			'500' => __( 'Medium (500)', 'cg-media-library-item' ),
+			'600' => __( 'Semi Bold (600)', 'cg-media-library-item' ),
+			'700' => __( 'Bold (700)', 'cg-media-library-item' ),
+			'800' => __( 'Extra Bold (800)', 'cg-media-library-item' ),
+			'900' => __( 'Black (900)', 'cg-media-library-item' ),
+		);
+
+		?>
+		<div class="cg-typography-fields">
+			<div class="cg-typography-field">
+				<label for="cg_typography_<?php echo esc_attr( $prefix ); ?>_font_family">
+					<?php esc_html_e( 'Font Family', 'cg-media-library-item' ); ?>
+				</label>
+				<select 
+					id="cg_typography_<?php echo esc_attr( $prefix ); ?>_font_family" 
+					name="cg_media_library_item_typography[<?php echo esc_attr( $prefix ); ?>_font_family]"
+					class="cg-select"
+				>
+					<?php foreach ( $this->font_families as $value => $label ) : ?>
+						<option value="<?php echo esc_attr( $value ); ?>" <?php selected( $font_family, $value ); ?>>
+							<?php echo esc_html( $label ); ?>
+						</option>
+					<?php endforeach; ?>
+				</select>
+			</div>
+
+			<div class="cg-typography-field">
+				<label for="cg_typography_<?php echo esc_attr( $prefix ); ?>_font_size">
+					<?php esc_html_e( 'Font Size', 'cg-media-library-item' ); ?>
+				</label>
+				<input 
+					type="text" 
+					id="cg_typography_<?php echo esc_attr( $prefix ); ?>_font_size" 
+					name="cg_media_library_item_typography[<?php echo esc_attr( $prefix ); ?>_font_size]" 
+					value="<?php echo esc_attr( $font_size ); ?>" 
+					class="cg-font-size" 
+					placeholder="16px"
+				/>
+			</div>
+
+			<div class="cg-typography-field">
+				<label for="cg_typography_<?php echo esc_attr( $prefix ); ?>_font_weight">
+					<?php esc_html_e( 'Font Weight', 'cg-media-library-item' ); ?>
+				</label>
+				<select 
+					id="cg_typography_<?php echo esc_attr( $prefix ); ?>_font_weight" 
+					name="cg_media_library_item_typography[<?php echo esc_attr( $prefix ); ?>_font_weight]"
+					class="cg-select"
+				>
+					<?php foreach ( $font_weights as $value => $label ) : ?>
+						<option value="<?php echo esc_attr( $value ); ?>" <?php selected( $font_weight, $value ); ?>>
+							<?php echo esc_html( $label ); ?>
+						</option>
+					<?php endforeach; ?>
+				</select>
+			</div>
+
+			<?php if ( 'title' === $prefix ) : ?>
+				<div class="cg-typography-field">
+					<label for="cg_typography_<?php echo esc_attr( $prefix ); ?>_line_height">
+						<?php esc_html_e( 'Line Height', 'cg-media-library-item' ); ?>
+					</label>
+					<input 
+						type="text" 
+						id="cg_typography_<?php echo esc_attr( $prefix ); ?>_line_height" 
+						name="cg_media_library_item_typography[<?php echo esc_attr( $prefix ); ?>_line_height]" 
+						value="<?php echo esc_attr( $line_height ); ?>" 
+						class="cg-line-height" 
+						placeholder="1.2"
+					/>
+				</div>
+			<?php endif; ?>
+		</div>
 		<?php
 	}
 
@@ -178,6 +418,50 @@ class CG_Media_Library_Item_Settings {
 	}
 
 	/**
+	 * Sanitize typography values
+	 *
+	 * @param array $input The input array of typography settings.
+	 * @return array Sanitized typography settings
+	 */
+	public function sanitize_typography( $input ) {
+		$sanitized_input = array();
+
+		foreach ( $this->default_typography as $key => $default_value ) {
+			if ( isset( $input[ $key ] ) ) {
+				if ( strpos( $key, 'font_family' ) !== false ) {
+					// Sanitize font family.
+					if ( array_key_exists( $input[ $key ], $this->font_families ) ) {
+						$sanitized_input[ $key ] = $input[ $key ];
+					} else {
+						$sanitized_input[ $key ] = $default_value;
+					}
+				} elseif ( strpos( $key, 'font_weight' ) !== false ) {
+					// Sanitize font weight.
+					$sanitized_input[ $key ] = in_array( $input[ $key ], array( '100', '200', '300', '400', '500', '600', '700', '800', '900' ), true ) 
+						? $input[ $key ] 
+						: $default_value;
+				} elseif ( strpos( $key, 'font_size' ) !== false ) {
+					// Sanitize font size.
+					$sanitized_input[ $key ] = preg_match( '/^(\d+)(px|rem|em|%)$/', $input[ $key ] ) 
+						? $input[ $key ] 
+						: $default_value;
+				} elseif ( strpos( $key, 'line_height' ) !== false ) {
+					// Sanitize line height.
+					$sanitized_input[ $key ] = is_numeric( $input[ $key ] ) || preg_match( '/^(\d+|\d+\.\d+)(px|em|rem|)$/', $input[ $key ] ) 
+						? $input[ $key ] 
+						: $default_value;
+				} else {
+					$sanitized_input[ $key ] = sanitize_text_field( $input[ $key ] );
+				}
+			} else {
+				$sanitized_input[ $key ] = $default_value;
+			}
+		}
+
+		return $sanitized_input;
+	}
+
+	/**
 	 * Render the settings page
 	 */
 	public function render_settings_page() {
@@ -185,148 +469,82 @@ class CG_Media_Library_Item_Settings {
 			return;
 		}
 
-		// Get current colors
-		$colors = get_option( 'cg_media_library_item_colors', $this->default_colors );
-
 		?>
-		<div class="wrap cg-media-library-settings">
+		<div class="wrap">
 			<h1><?php echo esc_html( get_admin_page_title() ); ?></h1>
 			
-			<div class="cg-settings-container">
-				<div class="cg-settings-form">
-					<form action="options.php" method="post">
-						<?php
-						settings_fields( 'cg_media_library_item_settings' );
-						do_settings_sections( 'cg-media-library-item-settings' );
-						submit_button();
-						?>
-					</form>
+			<form action="options.php" method="post">
+				<div class="nav-tab-wrapper">
+					<a href="#tab-colors" class="nav-tab nav-tab-active"><?php esc_html_e( 'Colors', 'cg-media-library-item' ); ?></a>
+					<a href="#tab-typography" class="nav-tab"><?php esc_html_e( 'Typography', 'cg-media-library-item' ); ?></a>
 				</div>
 				
-				<div class="cg-settings-preview">
-					<h2><?php esc_html_e( 'Live Preview', 'cg-media-library-item' ); ?></h2>
-					
-					<div id="cg-media-item-preview" class="media-item" role="region" aria-label="Document information">
-						<div class="media-item__main">
-							<div class="media-item__icon-wrapper" aria-hidden="true">
-								<?php echo CG_Media_Library_Item::DOCUMENT_ICON; ?>
-							</div>
-							<div class="media-item__type-badge" id="file-type-preview">PDF</div>
-							<h2 class="media-item__title" id="file-title-preview">Sample Document</h2>
-						</div>
-						<div class="media-item__footer">
-							<div class="media-item__size" id="file-size-preview">2.5 MB</div>
-							<a href="#" class="media-item__download-btn" onclick="return false;">
-								<span class="media-item__download-icon-wrapper" aria-hidden="true">
-									<?php echo CG_Media_Library_Item::DOWNLOAD_ICON; ?>
-								</span>
-								<span class="media-item__download-text">Download</span>
-							</a>
-						</div>
-					</div>
-					
-					<div class="cg-preview-note">
-						<p><?php esc_html_e( 'This preview updates in real-time as you change the colors.', 'cg-media-library-item' ); ?></p>
-					</div>
+				<?php settings_fields( 'cg_media_library_item_settings' ); ?>
+				
+				<div id="tab-colors" class="tab-content">
+					<?php do_settings_sections( 'cg-media-library-item-settings-colors' ); ?>
+					<?php
+					// Output Colors section.
+					$this->do_settings_sections( 'cg-media-library-item-settings', 'cg_media_library_item_colors_section' );
+					?>
 				</div>
-			</div>
+				
+				<div id="tab-typography" class="tab-content" style="display: none;">
+					<?php
+					// Output Typography section.
+					$this->do_settings_sections( 'cg-media-library-item-settings', 'cg_media_library_item_typography_section' );
+					?>
+				</div>
+				
+				<?php submit_button(); ?>
+			</form>
 		</div>
-		
-		<style type="text/css">
-			/* Settings page layout */
-			.cg-settings-container {
-				display: flex;
-				flex-wrap: wrap;
-				margin-top: 20px;
-			}
-			
-			.cg-settings-form {
-				flex: 1;
-				min-width: 300px;
-				max-width: 600px;
-				margin-right: 30px;
-			}
-			
-			.cg-settings-preview {
-				flex: 1;
-				min-width: 300px;
-				max-width: 400px;
-				padding: 20px;
-				background: #fff;
-				border: 1px solid #ccc;
-				border-radius: 5px;
-			}
-			
-			.cg-preview-note {
-				margin-top: 20px;
-				font-style: italic;
-			}
-			
-			/* Preview styles */
-			#cg-media-item-preview {
-				max-width: 100%;
-				margin-top: 20px;
-				background-color: <?php echo esc_attr( $colors['background_color'] ); ?>;
-			}
-			
-			#cg-media-item-preview .media-item__type-badge {
-				background-color: <?php echo esc_attr( $colors['type_badge_bg_color'] ); ?>;
-				color: <?php echo esc_attr( $colors['type_badge_text_color'] ); ?>;
-			}
-			
-			#cg-media-item-preview .media-item__footer {
-				background-color: <?php echo esc_attr( $colors['footer_bg_color'] ); ?>;
-			}
-			
-			#cg-media-item-preview .media-item__doc-icon {
-				color: <?php echo esc_attr( $colors['doc_icon_color'] ); ?>;
-			}
-			
-			#cg-media-item-preview .media-item__title {
-				color: <?php echo esc_attr( $colors['title_color'] ); ?>;
-			}
-			
-			#cg-media-item-preview .media-item__size {
-				color: <?php echo esc_attr( $colors['size_color'] ); ?>;
-			}
-			
-			#cg-media-item-preview .media-item__download-text {
-				color: <?php echo esc_attr( $colors['download_text_color'] ); ?>;
-			}
-			
-			#cg-media-item-preview .media-item__download-btn {
-				color: <?php echo esc_attr( $colors['download_btn_color'] ); ?>;
-			}
-			
-			#cg-media-item-preview .media-item__download-btn:hover {
-				color: <?php echo esc_attr( $colors['download_btn_hover_color'] ); ?>;
-			}
-		</style>
 		<?php
 	}
 
 	/**
-	 * Enqueue color picker assets
+	 * Custom implementation of do_settings_sections to output only specific sections
+	 * 
+	 * @param string $page The page name.
+	 * @param string $section_id The section ID.
+	 */
+	public function do_settings_sections( $page, $section_id ) {
+		global $wp_settings_sections, $wp_settings_fields;
+
+		if ( ! isset( $wp_settings_sections[ $page ] ) ) {
+			return;
+		}
+
+		$section = $wp_settings_sections[ $page ][ $section_id ];
+
+		if ( $section['title'] ) {
+			echo '<h2>' . esc_html( $section['title'] ) . '</h2>' . "\n";
+		}
+
+		if ( $section['callback'] ) {
+			call_user_func( $section['callback'] );
+		}
+
+		if ( ! isset( $wp_settings_fields ) || ! isset( $wp_settings_fields[ $page ] ) || ! isset( $wp_settings_fields[ $page ][ $section['id'] ] ) ) {
+			return;
+		}
+
+		echo '<table class="form-table" role="presentation">' . "\n";
+		do_settings_fields( $page, $section['id'] );
+		echo '</table>' . "\n";
+	}
+
+	/**
+	 * Enqueue admin scripts
 	 *
 	 * @param string $hook Current admin page.
 	 */
-	public function enqueue_color_picker( $hook ) {
+	public function enqueue_admin_scripts( $hook ) {
 		if ( 'settings_page_cg-media-library-item-settings' !== $hook ) {
 			return;
 		}
 
-		// Enqueue main plugin styles for preview
-		wp_enqueue_style(
-			'cg-media-library-item',
-			plugin_dir_url( dirname( __FILE__ ) ) . 'css/cg-media-library-item.css',
-			array(),
-			'1.0.0'
-		);
-		
-		// Enqueue color picker
 		wp_enqueue_style( 'wp-color-picker' );
-		
-		// Enqueue settings script
 		wp_enqueue_script(
 			'cg-media-library-item-settings',
 			plugin_dir_url( dirname( __FILE__ ) ) . 'js/settings.js',
@@ -335,36 +553,12 @@ class CG_Media_Library_Item_Settings {
 			true
 		);
 		
-		// Pass color mapping to JavaScript
-		wp_localize_script(
-			'cg-media-library-item-settings',
-			'cgMediaLibrarySettings',
-			array(
-				'colorMap' => array(
-					'background_color'       => '.media-item',
-					'type_badge_bg_color'    => '.media-item__type-badge',
-					'footer_bg_color'        => '.media-item__footer',
-					'doc_icon_color'         => '.media-item__doc-icon',
-					'title_color'            => '.media-item__title',
-					'type_badge_text_color'  => '.media-item__type-badge',
-					'size_color'             => '.media-item__size',
-					'download_text_color'    => '.media-item__download-text',
-					'download_btn_color'     => '.media-item__download-btn',
-					'download_btn_hover_color' => '.media-item__download-btn:hover',
-				),
-				'cssProperties' => array(
-					'background_color'       => 'background-color',
-					'type_badge_bg_color'    => 'background-color',
-					'footer_bg_color'        => 'background-color',
-					'doc_icon_color'         => 'color',
-					'title_color'            => 'color',
-					'type_badge_text_color'  => 'color',
-					'size_color'             => 'color',
-					'download_text_color'    => 'color',
-					'download_btn_color'     => 'color',
-					'download_btn_hover_color' => 'color',
-				),
-			)
+		// Add custom admin styles for the settings page
+		wp_enqueue_style(
+			'cg-media-library-item-admin',
+			plugin_dir_url( dirname( __FILE__ ) ) . 'css/admin.css',
+			array(),
+			'1.0.0'
 		);
 	}
 
@@ -396,9 +590,13 @@ class CG_Media_Library_Item_Settings {
 		// Get color settings.
 		$colors = get_option( 'cg_media_library_item_colors', $this->default_colors );
 		
+		// Get typography settings.
+		$typography = get_option( 'cg_media_library_item_typography', $this->default_typography );
+		
 		// Output the custom CSS.
 		?>
 		<style type="text/css">
+			/* Color styles */
 			.media-item {
 				background-color: <?php echo esc_attr( $colors['background_color'] ); ?>;
 			}
@@ -428,7 +626,30 @@ class CG_Media_Library_Item_Settings {
 			.media-item__download-btn:focus {
 				color: <?php echo esc_attr( $colors['download_btn_hover_color'] ); ?>;
 			}
+
+			/* Typography styles */
+			.media-item__title {
+				font-family: <?php echo esc_attr( $typography['title_font_family'] ); ?>;
+				font-size: <?php echo esc_attr( $typography['title_font_size'] ); ?>;
+				font-weight: <?php echo esc_attr( $typography['title_font_weight'] ); ?>;
+				line-height: <?php echo esc_attr( $typography['title_line_height'] ); ?>;
+			}
+			.media-item__type-badge {
+				font-family: <?php echo esc_attr( $typography['type_badge_font_family'] ); ?>;
+				font-size: <?php echo esc_attr( $typography['type_badge_font_size'] ); ?>;
+				font-weight: <?php echo esc_attr( $typography['type_badge_font_weight'] ); ?>;
+			}
+			.media-item__size {
+				font-family: <?php echo esc_attr( $typography['size_font_family'] ); ?>;
+				font-size: <?php echo esc_attr( $typography['size_font_size'] ); ?>;
+				font-weight: <?php echo esc_attr( $typography['size_font_weight'] ); ?>;
+			}
+			.media-item__download-text {
+				font-family: <?php echo esc_attr( $typography['download_font_family'] ); ?>;
+				font-size: <?php echo esc_attr( $typography['download_font_size'] ); ?>;
+				font-weight: <?php echo esc_attr( $typography['download_font_weight'] ); ?>;
+			}
 		</style>
 		<?php
 	}
-} 
+}
