@@ -322,44 +322,78 @@ class CG_Media_Library_Item_Settings {
 		$prefix = $args['prefix'];
 		$typography = get_option( 'cg_media_library_item_typography', $this->default_typography );
 		
-		$font_family = isset( $typography[ $prefix . '_font_family' ] ) ? $typography[ $prefix . '_font_family' ] : $this->default_typography[ $prefix . '_font_family' ];
-		$font_size = isset( $typography[ $prefix . '_font_size' ] ) ? $typography[ $prefix . '_font_size' ] : $this->default_typography[ $prefix . '_font_size' ];
-		$font_weight = isset( $typography[ $prefix . '_font_weight' ] ) ? $typography[ $prefix . '_font_weight' ] : $this->default_typography[ $prefix . '_font_weight' ];
-		$line_height = isset( $typography[ $prefix . '_line_height' ] ) ? $typography[ $prefix . '_line_height' ] : $this->default_typography[ $prefix . '_line_height' ];
+		// Font family field.
+		$font_family_id = $prefix . '_font_family';
+		$font_family_value = isset( $typography[ $font_family_id ] ) ? $typography[ $font_family_id ] : $this->default_typography[ $font_family_id ];
+		
+		// Font size field.
+		$font_size_id = $prefix . '_font_size';
+		$font_size_value = isset( $typography[ $font_size_id ] ) ? $typography[ $font_size_id ] : $this->default_typography[ $font_size_id ];
+		
+		// Font weight field.
+		$font_weight_id = $prefix . '_font_weight';
+		$font_weight_value = isset( $typography[ $font_weight_id ] ) ? $typography[ $font_weight_id ] : $this->default_typography[ $font_weight_id ];
+		
+		// Line height field (only for title).
+		$line_height_id = $prefix . '_line_height';
+		$line_height_value = isset( $typography[ $line_height_id ] ) ? $typography[ $line_height_id ] : $this->default_typography[ $line_height_id ];
 		
 		?>
 		<div class="cg-typography-fields">
 			<div class="cg-typography-field">
-				<label for="cg_typography_<?php echo esc_attr( $prefix ); ?>_font_family"><?php esc_html_e( 'Font Family', 'cg-media-library-item' ); ?></label>
-				<select id="cg_typography_<?php echo esc_attr( $prefix ); ?>_font_family" name="cg_media_library_item_typography[<?php echo esc_attr( $prefix ); ?>_font_family]" class="cg-typography-select" data-element="<?php echo esc_attr( $prefix ); ?>">
+				<label for="cg_typography_<?php echo esc_attr( $font_family_id ); ?>"><?php esc_html_e( 'Font Family', 'cg-media-library-item' ); ?></label>
+				<select 
+					id="cg_typography_<?php echo esc_attr( $font_family_id ); ?>" 
+					name="cg_media_library_item_typography[<?php echo esc_attr( $font_family_id ); ?>]" 
+					class="cg-typography-select"
+					data-default-value="<?php echo esc_attr( $this->default_typography[ $font_family_id ] ); ?>"
+				>
 					<?php foreach ( $this->font_families as $value => $label ) : ?>
-						<option value="<?php echo esc_attr( $value ); ?>" <?php selected( $font_family, $value ); ?>><?php echo esc_html( $label ); ?></option>
+						<option value="<?php echo esc_attr( $value ); ?>" <?php selected( $font_family_value, $value ); ?>><?php echo esc_html( $label ); ?></option>
 					<?php endforeach; ?>
 				</select>
 			</div>
 			
 			<div class="cg-typography-field">
-				<label for="cg_typography_<?php echo esc_attr( $prefix ); ?>_font_size"><?php esc_html_e( 'Font Size', 'cg-media-library-item' ); ?></label>
-				<input type="text" id="cg_typography_<?php echo esc_attr( $prefix ); ?>_font_size" name="cg_media_library_item_typography[<?php echo esc_attr( $prefix ); ?>_font_size]" value="<?php echo esc_attr( $font_size ); ?>" class="cg-typography-input cg-font-size" data-element="<?php echo esc_attr( $prefix ); ?>" />
+				<label for="cg_typography_<?php echo esc_attr( $font_size_id ); ?>"><?php esc_html_e( 'Font Size', 'cg-media-library-item' ); ?></label>
+				<input 
+					type="text" 
+					id="cg_typography_<?php echo esc_attr( $font_size_id ); ?>" 
+					name="cg_media_library_item_typography[<?php echo esc_attr( $font_size_id ); ?>]" 
+					value="<?php echo esc_attr( $font_size_value ); ?>" 
+					class="cg-typography-input cg-font-size"
+					data-default-value="<?php echo esc_attr( $this->default_typography[ $font_size_id ] ); ?>"
+				/>
 			</div>
 			
 			<div class="cg-typography-field">
-				<label for="cg_typography_<?php echo esc_attr( $prefix ); ?>_font_weight"><?php esc_html_e( 'Font Weight', 'cg-media-library-item' ); ?></label>
-				<select id="cg_typography_<?php echo esc_attr( $prefix ); ?>_font_weight" name="cg_media_library_item_typography[<?php echo esc_attr( $prefix ); ?>_font_weight]" class="cg-typography-select" data-element="<?php echo esc_attr( $prefix ); ?>">
-					<option value="300" <?php selected( $font_weight, '300' ); ?>><?php esc_html_e( 'Light (300)', 'cg-media-library-item' ); ?></option>
-					<option value="400" <?php selected( $font_weight, '400' ); ?>><?php esc_html_e( 'Regular (400)', 'cg-media-library-item' ); ?></option>
-					<option value="500" <?php selected( $font_weight, '500' ); ?>><?php esc_html_e( 'Medium (500)', 'cg-media-library-item' ); ?></option>
-					<option value="600" <?php selected( $font_weight, '600' ); ?>><?php esc_html_e( 'Semi-Bold (600)', 'cg-media-library-item' ); ?></option>
-					<option value="700" <?php selected( $font_weight, '700' ); ?>><?php esc_html_e( 'Bold (700)', 'cg-media-library-item' ); ?></option>
-					<option value="800" <?php selected( $font_weight, '800' ); ?>><?php esc_html_e( 'Extra-Bold (800)', 'cg-media-library-item' ); ?></option>
+				<label for="cg_typography_<?php echo esc_attr( $font_weight_id ); ?>"><?php esc_html_e( 'Font Weight', 'cg-media-library-item' ); ?></label>
+				<select 
+					id="cg_typography_<?php echo esc_attr( $font_weight_id ); ?>" 
+					name="cg_media_library_item_typography[<?php echo esc_attr( $font_weight_id ); ?>]" 
+					class="cg-typography-select"
+					data-default-value="<?php echo esc_attr( $this->default_typography[ $font_weight_id ] ); ?>"
+				>
+					<option value="300" <?php selected( $font_weight_value, '300' ); ?>><?php esc_html_e( 'Light (300)', 'cg-media-library-item' ); ?></option>
+					<option value="400" <?php selected( $font_weight_value, '400' ); ?>><?php esc_html_e( 'Regular (400)', 'cg-media-library-item' ); ?></option>
+					<option value="500" <?php selected( $font_weight_value, '500' ); ?>><?php esc_html_e( 'Medium (500)', 'cg-media-library-item' ); ?></option>
+					<option value="600" <?php selected( $font_weight_value, '600' ); ?>><?php esc_html_e( 'Semi-Bold (600)', 'cg-media-library-item' ); ?></option>
+					<option value="700" <?php selected( $font_weight_value, '700' ); ?>><?php esc_html_e( 'Bold (700)', 'cg-media-library-item' ); ?></option>
 				</select>
 			</div>
 			
-			<?php if ( $prefix === 'title' ) : ?>
-			<div class="cg-typography-field">
-				<label for="cg_typography_<?php echo esc_attr( $prefix ); ?>_line_height"><?php esc_html_e( 'Line Height', 'cg-media-library-item' ); ?></label>
-				<input type="text" id="cg_typography_<?php echo esc_attr( $prefix ); ?>_line_height" name="cg_media_library_item_typography[<?php echo esc_attr( $prefix ); ?>_line_height]" value="<?php echo esc_attr( $line_height ); ?>" class="cg-typography-input cg-line-height" data-element="<?php echo esc_attr( $prefix ); ?>" />
-			</div>
+			<?php if ( 'title' === $prefix ) : ?>
+				<div class="cg-typography-field">
+					<label for="cg_typography_<?php echo esc_attr( $line_height_id ); ?>"><?php esc_html_e( 'Line Height', 'cg-media-library-item' ); ?></label>
+					<input 
+						type="text" 
+						id="cg_typography_<?php echo esc_attr( $line_height_id ); ?>" 
+						name="cg_media_library_item_typography[<?php echo esc_attr( $line_height_id ); ?>]" 
+						value="<?php echo esc_attr( $line_height_value ); ?>" 
+						class="cg-typography-input cg-line-height"
+						data-default-value="<?php echo esc_attr( $this->default_typography[ $line_height_id ] ); ?>"
+					/>
+				</div>
 			<?php endif; ?>
 		</div>
 		<?php
