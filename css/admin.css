@@ -99,3 +99,23 @@
         max-width: 100%;
     }
 }
+
+/* Reset buttons */
+.cg-reset-wrapper {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #eee;
+    display: flex;
+    align-items: center;
+}
+
+.cg-reset-wrapper .spinner {
+    float: none;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.cg-reset-message {
+    color: #008a20;
+    font-style: italic;
+}

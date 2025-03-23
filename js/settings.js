@@ -32,6 +32,8 @@
     // Tab functionality
     const $tabs = $(".nav-tab");
     const $tabContent = $(".tab-content");
+    const $colorsResetWrapper = $("#cg-colors-reset-wrapper");
+    const $typographyResetWrapper = $("#cg-typography-reset-wrapper");
 
     // Handle tab clicks
     $tabs.on("click", function (e) {
@@ -45,6 +47,15 @@
       const target = $(this).attr("href");
       $tabContent.hide();
       $(target).show();
+
+      // Show/hide appropriate reset button
+      if (target === "#colors-tab") {
+        $colorsResetWrapper.show();
+        $typographyResetWrapper.hide();
+      } else {
+        $colorsResetWrapper.hide();
+        $typographyResetWrapper.show();
+      }
     });
 
     // Function to update color preview
@@ -133,5 +144,78 @@
         $(this).css("color", normalColor);
       }
     );
+
+    // Reset colors button
+    $("#cg-reset-colors").on("click", function () {
+      const $button = $(this);
+      const $spinner = $button.next(".spinner");
+      const $message = $spinner.next(".cg-reset-message");
+
+      // Show spinner
+      $spinner.css("visibility", "visible");
+
+      // Reset each color picker to its default value
+      $(".cg-color-picker").each(function () {
+        const $picker = $(this);
+        const defaultColor = $picker.data("default-color");
+        const target = $picker.data("target");
+
+        // Set the value
+        $picker.val(defaultColor).wpColorPicker("color", defaultColor);
+
+        // Update preview
+        updateColorPreview(target, defaultColor);
+      });
+
+      // Hide spinner and show success message
+      setTimeout(function () {
+        $spinner.css("visibility", "hidden");
+        $message
+          .text("Colors reset to defaults. Click Save Changes to apply.")
+          .fadeIn()
+          .delay(3000)
+          .fadeOut();
+      }, 500);
+    });
+
+    // Reset typography button
+    $("#cg-reset-typography").on("click", function () {
+      const $button = $(this);
+      const $spinner = $button.next(".spinner");
+      const $message = $spinner.next(".cg-reset-message");
+
+      // Show spinner
+      $spinner.css("visibility", "visible");
+
+      // Reset each typography field to its default value
+      $(".cg-typography-field select, .cg-typography-field input").each(
+        function () {
+          const $field = $(this);
+          const id = $field.attr("id");
+          const fieldType = id.replace("cg_typography_", "");
+
+          // Get default value from data attribute
+          const defaultValue = $field.data("default-value");
+
+          if (defaultValue !== undefined) {
+            // Set the value
+            $field.val(defaultValue);
+
+            // Update preview
+            updateTypographyPreview(fieldType, defaultValue);
+          }
+        }
+      );
+
+      // Hide spinner and show success message
+      setTimeout(function () {
+        $spinner.css("visibility", "hidden");
+        $message
+          .text("Typography reset to defaults. Click Save Changes to apply.")
+          .fadeIn()
+          .delay(3000)
+          .fadeOut();
+      }, 500);
+    });
   });
 })(jQuery);

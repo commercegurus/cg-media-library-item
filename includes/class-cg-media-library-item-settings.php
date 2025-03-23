@@ -247,21 +247,21 @@ class CG_Media_Library_Item_Settings {
 	}
 
 	/**
-	 * Render the colors section description
+	 * Render color settings section
 	 */
 	public function render_colors_section() {
-		echo '<p>' . esc_html__( 'Customize the colors of the media library item component.', 'cg-media-library-item' ) . '</p>';
+		echo '<p>' . esc_html__( 'Customize the colors for the media library item component.', 'cg-media-library-item' ) . '</p>';
 	}
 
 	/**
-	 * Render the typography section description
+	 * Render typography settings section
 	 */
 	public function render_typography_section() {
-		echo '<p>' . esc_html__( 'Customize the typography of the media library item component.', 'cg-media-library-item' ) . '</p>';
+		echo '<p>' . esc_html__( 'Customize the typography for the media library item component.', 'cg-media-library-item' ) . '</p>';
 	}
 
 	/**
-	 * Render a color field
+	 * Render color field
 	 *
 	 * @param array $args Field arguments.
 	 */
@@ -270,16 +270,41 @@ class CG_Media_Library_Item_Settings {
 		$label = $args['label'];
 		$colors = get_option( 'cg_media_library_item_colors', $this->default_colors );
 		$value = isset( $colors[ $id ] ) ? $colors[ $id ] : $this->default_colors[ $id ];
-
 		?>
 		<input type="text" 
 			id="cg_media_library_item_<?php echo esc_attr( $id ); ?>" 
 			name="cg_media_library_item_colors[<?php echo esc_attr( $id ); ?>]" 
 			value="<?php echo esc_attr( $value ); ?>" 
 			class="cg-color-picker" 
-			data-default-color="<?php echo esc_attr( $this->default_colors[ $id ] ); ?>" 
-			data-target="<?php echo esc_attr( $id ); ?>"
-		/>
+			data-target="<?php echo esc_attr( $id ); ?>" 
+			data-default-color="<?php echo esc_attr( $this->default_colors[ $id ] ); ?>" />
+		<?php
+	}
+
+	/**
+	 * Render reset buttons after the color and typography sections
+	 */
+	public function render_reset_buttons() {
+		?>
+		<tr>
+			<th scope="row"></th>
+			<td>
+				<div id="cg-colors-reset-wrapper" class="cg-reset-wrapper">
+					<button type="button" id="cg-reset-colors" class="button button-secondary">
+						<?php esc_html_e( 'Reset All Colors to Default', 'cg-media-library-item' ); ?>
+					</button>
+					<span class="spinner"></span>
+					<span class="cg-reset-message"></span>
+				</div>
+				<div id="cg-typography-reset-wrapper" class="cg-reset-wrapper" style="display: none;">
+					<button type="button" id="cg-reset-typography" class="button button-secondary">
+						<?php esc_html_e( 'Reset All Typography to Default', 'cg-media-library-item' ); ?>
+					</button>
+					<span class="spinner"></span>
+					<span class="cg-reset-message"></span>
+				</div>
+			</td>
+		</tr>
 		<?php
 	}
 
@@ -413,43 +438,40 @@ class CG_Media_Library_Item_Settings {
 			return;
 		}
 
-		// Get current settings
+		// Get saved settings.
 		$colors = get_option( 'cg_media_library_item_colors', $this->default_colors );
 		$typography = get_option( 'cg_media_library_item_typography', $this->default_typography );
-
 		?>
 		<div class="wrap">
 			<h1><?php echo esc_html( get_admin_page_title() ); ?></h1>
 			
+			<h2 class="nav-tab-wrapper">
+				<a href="#colors-tab" class="nav-tab nav-tab-active"><?php esc_html_e( 'Colors', 'cg-media-library-item' ); ?></a>
+				<a href="#typography-tab" class="nav-tab"><?php esc_html_e( 'Typography', 'cg-media-library-item' ); ?></a>
+			</h2>
+			
 			<div class="cg-settings-layout">
-				<form action="options.php" method="post" class="cg-settings-form">
-					<div class="nav-tab-wrapper">
-						<a href="#tab-colors" class="nav-tab nav-tab-active"><?php esc_html_e( 'Colors', 'cg-media-library-item' ); ?></a>
-						<a href="#tab-typography" class="nav-tab"><?php esc_html_e( 'Typography', 'cg-media-library-item' ); ?></a>
-					</div>
-					
-					<?php settings_fields( 'cg_media_library_item_settings' ); ?>
-					
-					<div id="tab-colors" class="tab-content">
-						<?php
-						// Output Colors section.
-						$this->do_settings_sections( 'cg-media-library-item-settings', 'cg_media_library_item_colors_section' );
-						?>
-					</div>
-					
-					<div id="tab-typography" class="tab-content" style="display: none;">
-						<?php
-						// Output Typography section.
-						$this->do_settings_sections( 'cg-media-library-item-settings', 'cg_media_library_item_typography_section' );
-						?>
-					</div>
-					
-					<?php submit_button(); ?>
-				</form>
+				<div class="cg-settings-form">
+					<form action="options.php" method="post">
+						<?php settings_fields( 'cg_media_library_item_settings' ); ?>
+						
+						<div id="colors-tab" class="tab-content">
+							<?php $this->do_settings_sections( 'cg-media-library-item-settings', 'cg_media_library_item_colors_section' ); ?>
+							<?php $this->render_reset_buttons(); ?>
+						</div>
+						
+						<div id="typography-tab" class="tab-content" style="display: none;">
+							<?php $this->do_settings_sections( 'cg-media-library-item-settings', 'cg_media_library_item_typography_section' ); ?>
+							<?php $this->render_reset_buttons(); ?>
+						</div>
+						
+						<?php submit_button(); ?>
+					</form>
+				</div>
 				
 				<div class="cg-settings-preview">
 					<h3><?php esc_html_e( 'Live Preview', 'cg-media-library-item' ); ?></h3>
-					<p><?php esc_html_e( 'This preview updates in real-time as you change settings.', 'cg-media-library-item' ); ?></p>
+					<p><?php esc_html_e( 'This preview updates as you change settings.', 'cg-media-library-item' ); ?></p>
 					
 					<div id="cg-media-item-preview" class="media-item" role="region" aria-label="Document information">
 						<div class="media-item__main">
