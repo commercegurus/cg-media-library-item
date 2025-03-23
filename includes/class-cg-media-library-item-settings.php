@@ -10,6 +10,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+// Define plugin version constant.
+if ( ! defined( 'CG_MEDIA_LIBRARY_ITEM_VERSION' ) ) {
+	define( 'CG_MEDIA_LIBRARY_ITEM_VERSION', '1.0.1' );
+}
+
 /**
  * Settings class for CG Media Library Item
  */
@@ -682,26 +687,26 @@ class CG_Media_Library_Item_Settings {
 			return;
 		}
 
-		// Enqueue main plugin styles for preview.
+		// Enqueue main plugin styles for preview
 		wp_enqueue_style(
 			'cg-media-library-item',
 			plugin_dir_url( __DIR__ ) . 'css/cg-media-library-item.css',
 			array(),
-			'1.0.0'
+			CG_MEDIA_LIBRARY_ITEM_VERSION
 		);
 
 		wp_enqueue_style( 'wp-color-picker' );
 
-		// Enqueue settings script.
+		// Enqueue settings script
 		wp_enqueue_script(
 			'cg-media-library-item-settings',
 			plugin_dir_url( __DIR__ ) . 'js/settings.js',
 			array( 'wp-color-picker', 'jquery' ),
-			'1.0.0',
+			CG_MEDIA_LIBRARY_ITEM_VERSION,
 			true
 		);
 
-		// Pass color and typography mapping to JavaScript.
+		// Pass color and typography mapping to JavaScript
 		wp_localize_script(
 			'cg-media-library-item-settings',
 			'cgMediaLibrarySettings',
@@ -768,7 +773,7 @@ class CG_Media_Library_Item_Settings {
 			'cg-media-library-item-admin',
 			plugin_dir_url( __DIR__ ) . 'css/admin.css',
 			array(),
-			'1.0.0'
+			CG_MEDIA_LIBRARY_ITEM_VERSION
 		);
 	}
 
