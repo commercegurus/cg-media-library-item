@@ -404,12 +404,12 @@ class CG_Media_Library_Item_Widget extends \Elementor\Widget_Base {
 			'download-title' => ! empty( $settings['download_text'] ) ? $settings['download_text'] : 'Download',
 		);
 
-		// Apply global settings if enabled
+		// Apply global settings if enabled.
 		$use_global_colors     = isset( $settings['use_global_colors'] ) && 'yes' === $settings['use_global_colors'];
 		$use_global_typography = isset( $settings['use_global_typography'] ) && 'yes' === $settings['use_global_typography'];
 
 		if ( $use_global_colors || $use_global_typography ) {
-			// Get global settings
+			// Get global settings.
 			$default_colors = array(
 				'background_color'         => '#f9f9f9',
 				'type_badge_bg_color'      => '#e2e8f0',
@@ -446,7 +446,7 @@ class CG_Media_Library_Item_Widget extends \Elementor\Widget_Base {
 
 			$global_typography = get_option( 'cg_media_library_item_typography', $default_typography );
 
-			// Output inline styles for global settings
+			// Output inline styles for global settings.
 			echo '<style>';
 
 			if ( $use_global_colors ) {

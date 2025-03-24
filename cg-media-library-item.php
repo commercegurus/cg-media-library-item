@@ -21,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 // Define plugin version constant.
 if ( ! defined( 'CG_MEDIA_LIBRARY_ITEM_VERSION' ) ) {
-	define( 'CG_MEDIA_LIBRARY_ITEM_VERSION', '1.0.1' );
+	define( 'CG_MEDIA_LIBRARY_ITEM_VERSION', '1.0.2' );
 }
 
 // Include settings class.
