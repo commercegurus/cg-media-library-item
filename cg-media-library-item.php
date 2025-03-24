@@ -3,7 +3,7 @@
  * Plugin Name: CG Media Library Item
  * Plugin URI: https://commercegurus.com/plugins/cg-media-library-item
  * Description: Displays media library items with title, description, file type, icon, size, and download link
- * Version: 1.0.1
+ * Version: 1.0.2
  * Author: CommerceGurus
  * Author URI: https://commercegurus.com
  * Text Domain: cg-media-library-item
